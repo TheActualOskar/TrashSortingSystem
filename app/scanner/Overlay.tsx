@@ -1,8 +1,8 @@
+import React from "react";
 import { Canvas, DiffRect, rect, rrect } from "@shopify/react-native-skia";
 import { Dimensions, Platform, StyleSheet } from "react-native";
 
 const { width, height } = Dimensions.get("window");
-
 const innerDimension = 300;
 
 const outer = rrect(rect(0, 0, width, height), 0, 0);
@@ -17,7 +17,7 @@ const inner = rrect(
   50
 );
 
-export const Overlay = () => {
+const Overlay: React.FC = () => {
   return (
     <Canvas
       style={
@@ -28,3 +28,5 @@ export const Overlay = () => {
     </Canvas>
   );
 };
+
+export default Overlay; // Use default export here

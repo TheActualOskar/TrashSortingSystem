@@ -1,53 +1,49 @@
-import { View, Text, StyleSheet, SafeAreaView, Pressable } from "react-native";
-import { Link, Stack } from "expo-router";
+import React, { useState } from "react";
+import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import BottomNavBar from "./BottomNavBar"; // Correct relative path
+import ScannerScreen from "./scanner/ScannerScreen"; // Import the ScannerScreen from the scanner folder
 
-import { useCameraPermissions } from "expo-camera";
+const App: React.FC = () => {
+  const [selectedScreen, setSelectedScreen] = useState<string>("Home");
 
-export default function Home() {
-  const [permission, requestPermission] = useCameraPermissions();
-
-  const isPermissionGranted = Boolean(permission?.granted);
+  const renderScreenContent = () => {
+    switch (selectedScreen) {
+      case "Home":
+        return <Text style={styles.screenText}>Welcome to Home Screen</Text>;
+      case "Scanner":
+        return <ScannerScreen />; // This will display the QR scanner screen
+      case "Receipts":
+        return <Text style={styles.screenText}>Welcome to Receipts Screen</Text>;
+      case "Data":
+        return <Text style={styles.screenText}>Welcome to My Data Screen</Text>;
+      default:
+        return null;
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <Stack.Screen options={{ title: "Overview", headerShown: false }} />
-      <Text style={styles.title}>QR Code Scanner</Text>
-      <View style={{ gap: 20 }}>
-        <Pressable onPress={requestPermission}>
-          <Text style={styles.buttonStyle}>Request Permissions</Text>
-        </Pressable>
-        <Link href={"/scanner"} asChild>
-          <Pressable disabled={!isPermissionGranted}>
-            <Text
-              style={[
-                styles.buttonStyle,
-                { opacity: !isPermissionGranted ? 0.5 : 1 },
-              ]}
-            >
-              Scan Code
-            </Text>
-          </Pressable>
-        </Link>
-      </View>
+      <View style={styles.contentContainer}>{renderScreenContent()}</View>
+      <BottomNavBar selected={selectedScreen} onSelect={setSelectedScreen} />
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
+    justifyContent: "flex-end",
     backgroundColor: "black",
-    justifyContent: "space-around",
-    paddingVertical: 80,
   },
-  title: {
+  contentContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  screenText: {
     color: "white",
-    fontSize: 40,
-  },
-  buttonStyle: {
-    color: "#0E7AFE",
-    fontSize: 20,
-    textAlign: "center",
+    fontSize: 24,
   },
 });
+
+export default App;
